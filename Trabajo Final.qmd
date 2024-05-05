@@ -1,0 +1,543 @@
+---
+title: "Trabajo Final- Análisis del proceso de Gestión de Medicamentos en Ecuador 2023"
+---
+
+## RESUMEN
+
+El presente trabajo es un alcance de un proyecto universitario realizado hace un semestre en la Universiad Central del Ecuador, en el que se ha realizado la validación de un modelo que explique el proceso de la gestión para el abastecimiento de medicamentos en el Ecuador en la que se tomo como ejemplo la base del 2023 proporcionada por el Ministerio de Salud Pública del Ecuador.
+
+Al ser un trabajo de la carrera de Ingeniería Estadística, se tiene un análisis completo tanto univariante como multivariante en el que se trabajan varias técnicas de minería de datos que nos permiten entender el comportamiento de las variables de estudio.
+
+# Pregunta de Investigación
+
+¿Cómo se pueden utilizar técnicas avanzadas de minería de datos para
+prever y optimizar la demanda de medicamentos en Ecuador, con el
+objetivo de mejorar la eficiencia en la gestión del abastecimiento y
+garantizar un suministro adecuado en el sistema de salud?
+
+# Objetivo General
+
+Construir un modelo predictivo mediante técnicas avanzadas de minería de datos para optimizar el abastecimiento de medicamentos en Ecuador, con el fin de garantizar una distribución eficiente y oportuna,
+contribuyendo así a mejorar la disponibilidad de medicamentos en el
+sistema de salud del país.
+
+## INTRODUCCIÓN
+
+El sistema de salud cumple un rol importante a nivel de cada país, en el Ecuador, se ha visto fraccionado en varias ocasiones debido a la mala gestión por parte de los encargados, necesita mejorar la planificación para hacer que este sea efectivo, a su vez, las entidades a cargo deben poder manejar el abastecimiento de los medicamentos a las instituciones de atención al público como son los hospitales a nivel nacional.
+
+El Ministerio de Salud Pública del Ecuador es la entidad encargada del
+abastecimiento de los medicamentos que proporcionan a los pacientes en
+farmacias y hospitales, por lo cual, con la ayuda de una base de datos,
+podemos saber la situación actual de esta gestión durante el período
+Otubre 2023, y nos permitirá entender cómo se manejan, además de
+predecir la situación de las instituciones.
+
+El presente proyecto se encarga del análisis de la situación mediante
+herramientas de minería de datos que nos ayudará a conocer la tendencia
+del manejo del presupuesto en cuanto a la distribución a cada una de las
+zonas del Ecuador para mejorar con esto la atención que se brinda a los
+pacientes e incluso la situación del nivel de salud a nivel mundial.
+
+##METODOLOGÍA
+
+*1. Definición del Problema y Objetivos:*
+
+-   Identificar y definir claramente el problema de abastecimiento de
+    medicamentos en Ecuador durante octubre de 2023.
+
+-   Establecer objetivos claros y medibles para el proyecto.
+
+*2. Recopilación de Datos:*
+
+-   Obtener permisos y colaboración de las instituciones de salud,
+    farmacias, entidades gubernamentales y proveedores de medicamentos
+    para acceder a datos relevantes.
+-   Recopilar datos históricos de abastecimiento, demanda y cualquier
+    otro factor que pueda influir en el suministro de medicamentos.
+
+*3. Preprocesamiento de Datos:*
+
+-   Realizar una limpieza exhaustiva de los datos para abordar valores
+    atípicos, datos faltantes y errores.
+-   Transformar y normalizar los datos según sea necesario para que sean
+    adecuados para el análisis.
+
+*4. Análisis Exploratorio de Datos (EDA):*
+
+-   Realizar un EDA para entender la distribución de los datos,
+    identificar patrones y visualizar tendencias en la demanda de
+    medicamentos.
+-   Utilizar gráficos y estadísticas descriptivas para resumir las
+    características clave de los datos.
+
+*5. Desarrollo de Modelos Predictivos:*
+
+Para una empresa, el análisis de correspondencias es importante para
+poder comprender fácilmente una variedad de relaciones. Por ejemplo, el
+mapeo de marcas es una forma de análisis de correspondencias.
+
+Algunas de las técnicas que se realizan es un Análisis de Correspondencias, pruebas chi cuadrado, ACP, etc.
+
+*6. Validación del Modelo:*
+
+-   Evaluar el rendimiento del modelo utilizando métricas relevantes
+    como el error cuadrático medio (ECM) o el coeficiente de
+    determinación (R²).
+-   Ajustar el modelo según sea necesario para mejorar su precisión y
+    generalización.
+
+*7. Generación de Recomendaciones y Conclusiones:*
+
+-   Interpretar los resultados del modelo y utilizarlos para generar
+    recomendaciones específicas para mejorar el abastecimiento de
+    medicamentos en octubre de 2023.
+-   Considerar la implementación de tecnologías como sistemas de alerta
+    temprana.
+
+##RESULTADOS
+
+```{r,warning=FALSE}
+library(readxl)
+DB<- read_excel("ABASTECIMIENTO MEDICAMENTOS NACIONAL OCTUBRE 2023 (1).xls")
+```
+
+**Variable CRITERIO DE DISPONIBILIDAD**
+
+```{r}
+library(epiDisplay)
+ tab1(DB$`CRITERIO DE DISPONIBILIDAD` , cum.percent = TRUE)
+```
+
+Se observa que entre abastecidos y sobre stock tenemos un **73.1%** en
+general para todos los institutos de salud públicado y medicamentos en
+contra de un **26.9** de riesgo de ruptura y ruptura de stock.
+
+**Variable CMMB**
+
+```{r}
+library(epiDisplay)
+ tab1(DB$CNMB, cum.percent = TRUE)
+```
+
+Definimos que del total de medicamentos que poseen cobertura gratuita
+por de instituciones de salud pública son **95.4%** , contra el **4.6%**
+que no lo tienen los cuales serían de pago propio .
+
+**Variable Disponibilidad** Para esto utilizaremos la función de base en
+r *summary* para obejener diferentes eestadísticos descriptivos.
+
+```{r}
+summary(DB$`DISPONIBILIDAD
+(meses)`)
+sd(DB$`DISPONIBILIDAD
+(meses)`)
+```
+
+Se observa que la media de la disponibilidad en meses de **6.46** pero
+existe una desviación estandar del **61.6** indicandonos que existe un
+alto grado de variación en los datos de este variable, siendo muy
+sensible a cada medicamento.
+
+**Gráfica de densidad**
+
+Obtendremos la gráfica de densidad de la variables para observar la
+distribución de los datos y para esto utilizaremos la librería *ggplot2*
+y la geometría *geom_density*.
+
+```{r, warning=FALSE}
+library(ggplot2)
+
+ggplot(DB,aes(x=DB$`DISPONIBILIDAD
+(meses)`))+
+    geom_density(fill="#69b3a2", color="#e9ecef", alpha=0.8)+
+   coord_cartesian(xlim = c(0, 50))+
+    ggtitle("Gráfico de densidad variable Disponibilidad")
+
+```
+
+**Boxplot**
+
+Obtendremos un boxplopt de la variable para observar la existencia de
+datos atípicos y para esto utilizaremos la librería *ggplot2* y la
+geometría *geom_boxplot*.
+
+```{r,message=FALSE}
+library(ggplot2)
+
+ggplot(DB,aes(y=`DISPONIBILIDAD
+(meses)`))+
+  coord_cartesian(ylim = c(0, 50))+
+    geom_boxplot(fill="#69b3a2", color="red", alpha=0.8)+
+
+    ggtitle("Boxplot variable Disponibilidad")
+
+```
+
+Determinamos que los datos se concentran entre **0** a **10** meses de
+disponibilidad de los medicamentos pero a su vez observamos que existe
+una gran cantidad de datos atípicos siendo una explicación para la
+dispersión de los datos .
+
+# Análisis Bivariado
+
+Para este caso usaremos la variable **ZONA** refenciada con la variable
+**Porcentaje de disponibilidad** creando una tabla de resumen.
+
+**Tabla de resumen Zona X porcentaje disponibilidad**
+
+```{r}
+library(dplyr)
+zona1<-DB %>% 
+  filter(ZONA=="ZONA_1")
+Disponibilidad_Zona1<-mean(zona1$PORCENTAJE)*100
+
+
+zona2<-DB %>% 
+  filter(ZONA=="ZONA_2")
+Disponibilidad_Zona2<-mean(zona2$PORCENTAJE)*100
+
+
+zona3<-DB %>% 
+  filter(ZONA=="ZONA_3")
+Disponibilidad_Zona3<-mean(zona3$PORCENTAJE)*100
+
+
+zona4<-DB %>% 
+  filter(ZONA=="ZONA_4")
+Disponibilidad_Zona4<-mean(zona4$PORCENTAJE)*100
+
+
+zona5<-DB %>% 
+  filter(ZONA=="ZONA_5")
+Disponibilidad_Zona5<-mean(zona5$PORCENTAJE)*100
+
+
+zona6<-DB %>% 
+  filter(ZONA=="ZONA_6")
+Disponibilidad_Zona6<-mean(zona6$PORCENTAJE)*100
+
+
+zona7<-DB %>% 
+  filter(ZONA=="ZONA_7")
+Disponibilidad_Zona7<-mean(zona7$PORCENTAJE)*100
+
+
+zona8<-DB %>% 
+  filter(ZONA=="ZONA_8")
+Disponibilidad_Zona8<-mean(zona8$PORCENTAJE)*100
+
+
+
+zona9<-DB %>% 
+  filter(ZONA=="ZONA_9")
+Disponibilidad_Zona9<-mean(zona9$PORCENTAJE)*100
+
+
+
+Disponibilidad_por_zona<-data.frame(
+  Disponibilidad_Zona1, Disponibilidad_Zona2, Disponibilidad_Zona3,
+   Disponibilidad_Zona4, Disponibilidad_Zona5, Disponibilidad_Zona6,
+   Disponibilidad_Zona7, Disponibilidad_Zona8, Disponibilidad_Zona9)
+
+head(Disponibilidad_por_zona)
+
+
+```
+
+Concluímos que la zona 1 tiene el menor nivel de disponibilidad de
+medicamentos con un **69.71%** contra un **89.95%** de la zona 6
+indicandonos que la zona es un factor para anlizar en la disponibilidad
+de medicamentos.
+
+## Análisis de Correspondencias
+
+La aplicación del análisis de correspondencias busca encontrar un
+espacio multidimensional reducido para representar la relación existe
+entre las categorías de dos variables no métricas.
+
+### Variable Zona
+
+**ZONA**: Zona (1-9) donde se encuentra clasificado cada institución de
+salud pública a nivel nacional.
+
+**Criterio de disponibilidad**: Criterio entre 4 posibles estados.
+
+### Criterio en la base de datos
+
+Se procedera hacer un tabla de contigencia en la base de datos con las
+variables mencionadas anteriormente para realizar el proceso.
+
+```{r, warning=FALSE}
+
+DT<-table(DB$ZONA,DB$`CRITERIO DE DISPONIBILIDAD`)
+DT
+```
+### Cálculo análisis de correspondencias
+
+Procedemos a realizar el cálculo donde prodemos apreciar la masa que son
+las ponderaciones por cada columna , la inercia y por último las
+coordenadas en las nuevas dimensionas.
+
+```{r}
+library(ca)
+CA<-ca(DT)
+CA
+```
+
+### Coeficiente de asociación
+
+Calculamos el coeficiente para analizar cual es porcentaje de asociacion
+entra nuestras dos variables para este caso seria la **zona** con la
+**criterio de disponibilidad**.
+
+```{r}
+library(DescTools)
+coef.cont = DescTools::ContCoef(DT)
+coef.cont
+```
+
+Observamos que se obtiene un 23.31 por ciento de asociación entre las
+dos variables .
+
+### Bondad de Ajuste test estadístico ji-cuadrado y gráfico en las nuevas coordenas
+
+El test nos permite contrastar la hipótesis nula de independecia entre
+las dos variables que conforman la tabla de contigencia.
+
+```{r}
+library(FactoMineR)
+ summary (CA(DT, ncp=2,graph=T))
+```
+
+**Test** Con un resultado de 0 en el p valor podemos rechazar la
+hipótesis de independencia indicando que las variables son dependientes
+entres sus categorias permitiendonos decir que la zona con una análisis
+posterior si explica el abastecimiento de medicamentos.
+
+# Modelo multivariado simple
+
+# Cálculo del modelo de regresión
+
+Se procederan a encontrar los coeficientes Beta 0 y Beta 1
+
+```{r  }
+
+lim<-lm(DB$PORCENTAJE~DB$`Consumo Octubre
+(unidades)`+DB$`DISPONIBILIDAD
+(meses)`)
+summary(lim)
+
+```
+
+Se concluye que la variables consumo de octubre y la disponibilidad son
+significatiavas para el modelo ademas de un r cuadrado ajustado de
+**0.008319** indicando que explica el modelo en un 0.08 %
+
+# Anova
+
+Se procedera con un análisis de la varianza del módelo para determinar
+si el modelo es significativo .
+
+```{r}
+
+anova<-aov(lm(DB$PORCENTAJE~DB$`Consumo Octubre
+(unidades)`+DB$`DISPONIBILIDAD
+(meses)`))
+summary(anova)
+```
+
+Ambos valores F son de 208,3 y 130 respectivamente siendo mayores al F
+teórico se conlcuye que el módelo nes significativo , ademas que el p
+valor en las variables es cercano a 0 en todos los casos
+
+# Modelo Logic
+
+Se realizara el modelo Logic con las variables anteriormente mencionados
+indicandonos que se obtendra la probabilidad de que si exista
+abastecimientos.
+
+**Implementación del modelo**
+
+```{r}
+#Variable criterio de disponibilidad
+DB$crid<-ifelse(DB$`CRITERIO DE DISPONIBILIDAD`=="ABASTECIDO" ,1,0)
+
+
+DB$crid<-ifelse(DB$`CRITERIO DE DISPONIBILIDAD`=="SOBRE STOCK" ,1,DB$crid)
+
+# Variables por Zonas
+DB$zc<-ifelse(DB$ZONA=="ZONA_3",1,0)
+DB$zc<-ifelse(DB$ZONA=="ZONA_5",1,DB$zc)
+DB$zc<-ifelse(DB$ZONA=="ZONA_6",1,DB$zc)
+DB$zc<-ifelse(DB$ZONA=="ZONA_9",1,DB$zc)
+
+#Creación del Grupo Terapéutico
+DB$gtc<-ifelse(DB$`GRUPO 
+TERAPÉUTICO`=="ÓRGANOS DE LOS SENTIDOS",0,1)
+
+DB$gtc<-ifelse(DB$`GRUPO 
+TERAPÉUTICO`==" PRODUCTOS ANTIPARASITARIOS, INSECTICIDAS Y REPELENTES",0,DB$gtc)
+
+DB$gtc<-ifelse(DB$`GRUPO 
+TERAPÉUTICO`==" SISTEMA GENITO-URINARIO Y HORMONAS SEXUALES ",0,DB$gtc)
+
+DB$gtc<-ifelse(DB$`GRUPO 
+TERAPÉUTICO`==" TRACTO ALIMENTARIO Y METABOLISMO ",0,DB$gtc)
+
+#Importancia
+DB$cvc<-ifelse(DB$`CLASIFICACIÓN VEN*`=="E",0,1)
+
+#Cuadro Nacional de medicamentos basicos
+DB$cnmbc<-ifelse(DB$CNMB=="Si",1,0)
+
+#Modelo
+modlo<-glm(crid ~ 0+zc+gtc+cnmbc+cvc, data=DB,
+               family = binomial(link = "logit"))
+DB$modlo<-predict(modlo,type="response")
+
+```
+
+**Curva Roc**
+
+```{r}
+library("pROC")
+roclo<-roc(DB$crid,DB$modlo)
+
+plot(roclo, main="Curva ROC",
+     print.auc=T,
+     print.thres=T,
+     print.thres.col="red",
+     print.thres.cex=1,
+     auc.polygon=T,
+     auc.polygon.ol="lightblue",
+     smooth=T,
+     xlab="Tasa de Falsos positivos",
+     yab="Tasa de verdaderos positivos")
+
+power.roc.test(roclo)
+DB$crid1<-ifelse(DB$modlo>=0.698,1,0)
+
+```
+
+**Interpretación del modelo**
+
+```{r}
+exp(coef(modlo))
+```
+
+**Matriz de confusión**
+
+```{r}
+#Matriz deconfusion
+mat1=table(DB$crid,DB$crid1,dnn=c("observado","predicho"))
+mat1
+library("caret")
+matriz1<-confusionMatrix(as.factor(DB$crid1),
+                         as.factor(DB$crid))
+matriz1
+```
+
+# Modelo Probit
+
+Se realizara el modelo Probit con las variables anteriormente
+mencionados indicandonos que se obtendra la probabilidad de que si
+exista abastecimientos.
+
+**Implementación del modelo**
+
+```{r}
+modpr<-glm(crid ~ 0+zc+gtc+cnmbc+cvc, data=DB,
+               family = binomial(link ="probit"))
+DB$modpr<-predict(modpr,type="response")
+
+```
+
+**Curva Roc**
+
+```{r}
+library("pROC")
+rocpr<-roc(DB$crid,DB$modpr)
+
+plot(rocpr, main="Curva ROC",
+     print.auc=T,
+     print.thres=T,
+     print.thres.col="red",
+     print.thres.cex=1,
+     auc.polygon=T,
+     auc.polygon.ol="lightblue",
+     smooth=T,
+     xlab="Tasa de Falsos positivos",
+     yab="Tasa de verdaderos positivos")
+
+power.roc.test(rocpr)
+DB$crid2<-ifelse(DB$modpr>=0.719,1,0)
+
+
+```
+
+**Interpretación del modelo**
+
+```{r}
+exp(coef(modpr))
+```
+
+**Matriz de confusión**
+
+```{r}
+#atriz deconfusion
+mat2=table(DB$crid,DB$crid2,dnn=c("observado","predicho"))
+mat2
+library("caret")
+matriz2<-confusionMatrix(as.factor(DB$crid2),
+                         as.factor(DB$crid))
+matriz2
+```
+
+##CONCLUSIONES Y RECOMENDACIONES
+
+Realizado el análisis exploratorio de datos se encontro una asociación
+entre la variable zona y disponibilidad además de que las variables
+cuantitativas analizadas de forma univariante no siguen ninguna
+distribución de datos conocida.
+
+Realizado el análisis se afirma la asociación entre la variable zona y
+disponibilidad de medicamentos indicando que es importante analizar la
+causa del porque ciertas zonas estan mejor abastecidas que otras.
+
+# REFERENCIAS BIBLIOGRAFICAS
+
+Ministerio de Salud Pública . (s.f.). Un Nuevo Ecuador.
+
+Ministerio de Salud Pública. (18 de Mayo de 2023). Un Nuevo Ecuador.
+Obtenido de
+<https://www.salud.gob.ec/msp-cuenta-con-un-80-de-abastecimiento-en-medicamentos-y-dispositivos-medicos-a-escala-nacional/#>:\~:text=Para%202023%20el%20MSP%20ha,para%20su%20abastecimiento%20es%20complejo.
+
+Ministerio de Salud Pública del Ecuador. (11 de Mayo de 2023).
+Nacionales Unidas Ecuador . Obtenido de
+<https://ecuador.un.org/es/231128-ministerio-de-salud-p%C3%BAblica-de-ecuador-firm%C3%B3-nuevo-acuerdo-con-naciones-unidas-para-promover>
+
+Alexandra, C. B. (2016). Análisis de la gestión del suministro de
+insumos médicos en el Hospital San Francisco de Quito -- IESS.
+
+Celi, M. (2019). Estrategias para la mejora en la gestión del
+abastecimiento hospitalario en el Hospital de Especialidades Fuerzas
+Armadas N°1.
+
+Quispe. (2019). Gestión de abastecimiento de medicamentos aplicando el
+modelo EOQ (Economic Order Quantity) .
+
+Guerrero-Mieles, L. M., & Escobar-García, M. C. (2020). "Efectos
+sociales del desabastecimiento de medicinas en el hospital del Instituto
+Ecuatoriano de Seguridad Social de la ciudad de Portoviejo en el año
+2020." Universidad Técnica de Manabí - Ecuador.
+[leoguerreromie87\@gmail.com](mailto:leoguerreromie87@gmail.com){.email},
+[martha.escobar\@utm.edu.ec](mailto:martha.escobar@utm.edu.ec){.email}.
+
+Ortiz-Prado E, Galarza C, Cornejo León F, Ponce J. Acceso a medicamentos
+y situación del mercado farmacéutico en Ecuador. Rev Panam Salud
+Publica. 2014;36(1):57--62.
+
+
+
+
+
